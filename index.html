@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="vi" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng Dụng Thôn Xóm - Kết Nối Dân Cán Bộ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1b4d3e',
+                        secondary: '#d97706',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans antialiased min-h-screen flex flex-col justify-between transition-colors duration-300">
+
+    <!-- Top Header & Area Info -->
+    <header class="bg-primary text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center overflow-hidden border border-white/30">
+                    <img id="header-avatar" src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&q=80&w=100" alt="Bìa" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg tracking-wide flex items-center gap-2">
+                        <span id="display-khu-vuc">Thôn Xóm Bình An</span>
+                        <span class="text-xs bg-secondary px-2 py-0.5 rounded-full font-normal text-white">Chính Thức</span>
+                    </h1>
+                    <p class="text-xs text-gray-200" id="display-phuong-tỉnh">Phường Phước Long, Tỉnh Vĩnh Long</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <button onclick="toggleDarkMode()" class="bg-white/10 hover:bg-white/20 text-white text-xs px-2.5 py-2 rounded-lg transition" title="Đổi giao diện Sáng / Tối">
+                    <i id="dark-mode-icon" class="fa-solid fa-moon"></i>
+                </button>
+                <a href="tel:115" class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow flex items-center gap-1 transition">
+                    <i class="fa-solid fa-phone-volume"></i> 115
+                </a>
+                <a href="tel:113" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow flex items-center gap-1 transition">
+                    <i class="fa-solid fa-shield-halved"></i> 113
+                </a>
+                <button onclick="openLoginModal()" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-lock"></i> <span id="auth-btn-text">Cán Bộ Đăng Nhập</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Banner / Cover Area -->
+    <section class="relative bg-gray-900 text-white h-48 md:h-64 overflow-hidden shadow-inner">
+        <img id="cover-image-display" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1600" class="w-full h-full object-cover opacity-75 transition-all duration-500" alt="Ảnh bìa khu vực">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-6">
+            <div class="max-w-7xl mx-auto w-full">
+                <span class="text-xs uppercase tracking-widest bg-secondary text-white px-2.5 py-1 rounded font-semibold">Cổng Thông Tin Số & Tương Tác</span>
+                <h2 class="text-2xl md:text-3xl font-extrabold mt-1 text-white drop-shadow">Kết Nối Trách Nhiệm - Xây Dựng Thôn Xóm Văn Minh</h2>
+                <p class="text-xs md:text-sm text-gray-200 mt-1">Hệ thống tương tác trực tiếp giữa Nhân dân và Cán bộ Đảng viên khu vực.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white dark:bg-gray-800 shadow border-b dark:border-gray-700 sticky top-[61px] z-40">
+        <div class="max-w-7xl mx-auto px-4 flex space-x-1 md:space-x-4 overflow-x-auto scrollbar-none py-2 text-sm font-semibold">
+            <button onclick="switchTab('tab-tintuc')" id="btn-tab-tintuc" class="tab-btn px-3.5 py-2 rounded-lg text-primary bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 transition flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-newspaper"></i> Tin Tức
+            </button>
+            <button onclick="switchTab('tab-phananh')" id="btn-tab-phananh" class="tab-btn px-3.5 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-bullhorn"></i> Phản Ánh
+            </button>
+            <button onclick="switchTab('tab-thutuc')" id="btn-tab-thutuc" class="tab-btn px-3.5 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-file-invoice"></i> Thủ Tục (AI)
+            </button>
+            <button onclick="switchTab('tab-hopchibo')" id="btn-tab-hopchibo" class="tab-btn px-3.5 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-users-rectangle"></i> Họp Chi Bộ
+            </button>
+            <button onclick="switchTab('tab-bieuquyet')" id="btn-tab-bieuquyet" class="tab-btn px-3.5 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-check-to-slot"></i> Biểu Quyết
+            </button>
+            <button onclick="switchTab('tab-livechat')" id="btn-tab-livechat" class="tab-btn px-3.5 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-comments"></i> Chat Trực Tuyến
+            </button>
+            <button id="tab-btn-quanly" onclick="switchTab('tab-quanly')" class="tab-btn hidden px-3.5 py-2 rounded-lg text-amber-700 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800 transition flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-user-shield"></i> Quản Lý
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Contents Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- TAB 1: TIN TỨC -->
+            <div id="tab-tintuc" class="tab-content space-y-6">
+                <div class="flex flex-wrap justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border dark:border-gray-700 gap-3">
+                    <div>
+                        <h3 class="font-bold text-lg">Tin Tức & Thông Báo Thôn Xóm</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Cập nhật chủ trương, hoạt động mới nhất tại địa phương.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="search-news-input" oninput="filterNews()" placeholder="Tìm kiếm tin tức..." class="text-xs border dark:border-gray-700 dark:bg-gray-900 px-3 py-2 rounded-lg outline-none">
+                        <div id="action-add-news-container"></div>
+                    </div>
+                </div>
+                <div id="news-feed-list" class="space-y-4"></div>
+            </div>
+
+            <!-- TAB 2: PHẢN ÁNH KHIẾU NẠI -->
+            <div id="tab-phananh" class="tab-content hidden space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700">
+                    <h3 class="font-bold text-lg mb-1"><i class="fa-solid fa-triangle-exclamation text-secondary"></i> Gửi Phản Ánh / Khiếu Nại Trực Tuyến</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">Mọi ý kiến của nhân dân sẽ được chuyển trực tiếp tới cán bộ xử lý. <b>Bắt buộc nhập đầy đủ thông tin định danh và tối thiểu 3 hình ảnh minh chứng.</b></p>
+                    
+                    <form id="form-phan-anh" onsubmit="submitPhanAnh(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold mb-1">Họ và tên người phản ánh <span class="text-red-500">*</span></label>
+                                <input type="text" id="pa-hoten" required placeholder="Nhập họ và tên đầy đủ" class="w-full text-sm border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold mb-1">Số điện thoại liên hệ <span class="text-red-500">*</span></label>
+                                <input type="tel" id="pa-sdt" required placeholder="Số điện thoại di động" class="w-full text-sm border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2 outline-none">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold mb-1">Địa chỉ / Khu vực phản ánh <span class="text-red-500">*</span></label>
+                            <input type="text" id="pa-diachi" required placeholder="Số nhà, tên đường, tổ/thôn..." class="w-full text-sm border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2 outline-none">
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="block text-xs font-semibold">Nội dung phản ánh (Tối đa 1000 ký tự) <span class="text-red-500">*</span></label>
+                                <span id="pa-char-count" class="text-xs text-gray-400">0/1000</span>
+                            </div>
+                            <textarea id="pa-noidung" required maxlength="1000" rows="4" oninput="updateCharCount()" placeholder="Mô tả chi tiết sự việc..." class="w-full text-sm border dark:border-gray-700 dark:bg-gray-900 rounded-lg p-3 outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold mb-1">Đính kèm hình ảnh phản ánh <span class="text-red-500">* (Bắt buộc ít nhất 3 hình)</span></label>
+                            <input type="file" id="pa-images" multiple accept="image/*" onchange="handlePaImages(event)" class="text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-primary">
+                            <div id="pa-image-preview" class="flex gap-2 mt-2 flex-wrap"></div>
+                            <p class="text-[11px] text-gray-400 mt-1">Đồng bộ lưu trữ trực tiếp vào không gian Terabox Cloud.</p>
+                        </div>
+                        <button type="submit" class="w-full bg-primary hover:bg-emerald-800 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow">
+                            <i class="fa-solid fa-paper-plane mr-1"></i> Gửi Phản Ánh Tới Cán Bộ
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 space-y-4">
+                    <div class="flex flex-wrap justify-between items-center gap-3">
+                        <h4 class="font-bold text-base flex items-center gap-2">
+                            <span>Danh Sách Phản Ánh & Xử Lý</span>
+                            <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2.5 py-1 rounded-full font-medium" id="pa-count-badge">0</span>
+                        </h4>
+                        <div class="flex items-center gap-2 text-xs">
+                            <select id="pa-filter-status" onchange="renderPhanAnh()" class="border dark:border-gray-700 dark:bg-gray-900 px-2.5 py-1.5 rounded-lg outline-none">
+                                <option value="all">Tất cả trạng thái</option>
+                                <option value="Đang tiếp nhận">Đang tiếp nhận</option>
+                                <option value="Đang xử lý">Đang xử lý</option>
+                                <option value="Đã xử lý">Đã xử lý xong</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="phan-anh-list-container" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- TAB 3: THỦ TỤC HÀNH CHÍNH & AI -->
+            <div id="tab-thutuc" class="tab-content hidden space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 space-y-4">
+                    <div>
+                        <h3 class="font-bold text-lg"><i class="fa-solid fa-robot text-primary"></i> Tra Cứu Thủ Tục Hành Chính & AI Gemini</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Tra cứu nhanh quy trình thủ tục hoặc mở <b>Thư Viện Pháp Luật</b> xem văn bản gốc.</p>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <input type="text" id="tt-search-input" placeholder="Nhập tên thủ tục (VD: Đăng ký khai sinh, làm CCCD...)" class="flex-grow text-sm border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3.5 py-2.5 outline-none">
+                        <button onclick="searchThuTucAI()" class="bg-primary hover:bg-emerald-800 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Hỏi AI Gemini
+                        </button>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-between bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 p-3.5 rounded-lg text-xs">
+                        <span class="text-blue-900 dark:text-blue-300 font-medium"><i class="fa-solid fa-scale-balanced text-blue-700 mr-1"></i> Tra cứu văn bản pháp luật gốc:</span>
+                        <a href="https://thuvienphapluat.vn" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded font-semibold transition flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-external-link-alt text-[10px]"></i> Mở Thư Viện Pháp Luật
+                        </a>
+                    </div>
+
+                    <div id="ai-result-box" class="hidden bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded-xl p-4 space-y-3">
+                        <div class="flex items-center gap-2 text-primary font-bold text-sm border-b dark:border-gray-700 pb-2">
+                            <i class="fa-solid fa-microchip"></i> Trợ lý AI Gemini hướng dẫn:
+                        </div>
+                        <div id="ai-answer-content" class="text-xs leading-relaxed space-y-2"></div>
+                    </div>
+                </div>
+
+                <div id="officer-upload-thutuc-card" class="hidden bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 p-5 rounded-xl space-y-3">
+                    <h4 class="font-bold text-sm text-primary flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Cán Bộ: Đăng Tải Tài Liệu / Biểu Mẫu Thủ Tục
+                    </h4>
+                    <form onsubmit="officerUploadThuTuc(event)" class="space-y-3">
+                        <input type="text" id="off-tt-title" placeholder="Tiêu đề tài liệu thủ tục (VD: Mẫu CT01)" required class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-semibold mb-1">File PDF / Văn bản:</label>
+                                <input type="file" id="off-tt-file" accept=".pdf,.doc,.docx" class="text-xs border dark:border-gray-700 rounded-lg p-1 w-full">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold mb-1">Hình ảnh hướng dẫn:</label>
+                                <input type="file" id="off-tt-img" accept="image/*" class="text-xs border dark:border-gray-700 rounded-lg p-1 w-full">
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-primary text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-emerald-800 transition">
+                            Đẩy Lên Hệ Thống (Terabox Sync)
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 space-y-3">
+                    <h4 class="font-bold text-base">Tài Liệu & Biểu Mẫu Hành Chính Địa Phương</h4>
+                    <div id="thutuc-doc-list" class="space-y-2.5"></div>
+                </div>
+            </div>
+
+            <!-- TAB 4: HỌP CHI BỘ -->
+            <div id="tab-hopchibo" class="tab-content hidden space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-lg"><i class="fa-solid fa-users-rectangle text-primary"></i> Họp Chi Bộ & Tài Liệu Nội Bộ</h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Sinh hoạt chi bộ, nghị quyết và đóng góp ý kiến đảng viên.</p>
+                        </div>
+                        <div id="action-add-hop-container"></div>
+                    </div>
+                    <div id="hop-chibo-list" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- TAB 5: BIỂU QUYẾT -->
+            <div id="tab-bieuquyet" class="tab-content hidden space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-lg"><i class="fa-solid fa-check-to-slot text-secondary"></i> Biểu Quyết & Bình Chọn Thôn Xóm</h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Tham gia biểu quyết công trình, danh hiệu thi đua.</p>
+                        </div>
+                        <div id="action-add-bq-container"></div>
+                    </div>
+                    <div id="bieu-quyet-list" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- TAB 6: CHAT TRỰC TUYẾN -->
+            <div id="tab-livechat" class="tab-content hidden space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 flex flex-col h-[500px]">
+                    <div class="border-b dark:border-gray-700 pb-3 mb-4">
+                        <h3 class="font-bold text-base flex items-center gap-2">
+                            <i class="fa-solid fa-comments text-primary"></i> Phòng Trao Đổi Trực Tuyến (Dân & Cán Bộ)
+                        </h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Gửi câu hỏi trực tiếp, cán bộ trực ban sẽ giải đáp nhanh chóng.</p>
+                    </div>
+
+                    <div id="chat-messages-box" class="flex-grow overflow-y-auto space-y-3 pr-2 mb-4 text-xs"></div>
+
+                    <form onsubmit="sendChatMessage(event)" class="flex gap-2 pt-2 border-t dark:border-gray-700">
+                        <input type="text" id="chat-input-name" placeholder="Tên của bạn..." required class="w-32 text-xs border dark:border-gray-700 dark:bg-gray-900 px-3 py-2.5 rounded-lg outline-none">
+                        <input type="text" id="chat-input-msg" placeholder="Nhập nội dung trao đổi..." required class="flex-grow text-xs border dark:border-gray-700 dark:bg-gray-900 px-3.5 py-2.5 rounded-lg outline-none">
+                        <button type="submit" class="bg-primary hover:bg-emerald-800 text-white px-4 py-2.5 rounded-lg text-xs font-semibold transition shadow">
+                            <i class="fa-solid fa-paper-plane"></i> Gửi
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- TAB 7: QUẢN LÝ HỆ THỐNG -->
+            <div id="tab-quanly" class="tab-content hidden space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 space-y-6">
+                    <div class="flex justify-between items-center border-b dark:border-gray-700 pb-4">
+                        <div>
+                            <h3 class="font-bold text-lg"><i class="fa-solid fa-user-shield text-primary"></i> Quản Lý Phân Quyền Tài Khoản</h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Cấp/xóa tài khoản Mẹ (Cán bộ) và Con (Đảng viên).</p>
+                        </div>
+                        <div id="current-user-badge" class="text-xs px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-primary font-semibold border border-emerald-200"></div>
+                    </div>
+
+                    <div id="config-khuvuc-section" class="hidden bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-xl space-y-3">
+                        <h4 class="font-bold text-sm text-amber-900 dark:text-amber-300"><i class="fa-solid fa-map-location-dot"></i> Cấu Hình Phân Vùng & Ảnh Bìa</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold mb-1">Tên Khu Vực / Thôn / Xóm:</label>
+                                <input type="text" id="cfg-khu-vuc" class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold mb-1">Tên Phường & Tỉnh:</label>
+                                <input type="text" id="cfg-phuong-tỉnh" class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2">
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <label class="text-xs font-semibold">Ảnh Bìa Mới:</label>
+                            <input type="file" id="cfg-cover-img" accept="image/*" class="text-xs border dark:border-gray-700 rounded-lg p-1">
+                        </div>
+                        <button onclick="saveKhuVucConfig()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow">
+                            Lưu Thiết Lập Phân Vùng
+                        </button>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 p-4 rounded-xl space-y-3">
+                        <h4 id="create-acc-title" class="font-bold text-sm">Tạo Tài Khoản Mới</h4>
+                        <form onsubmit="createNewAccount(event)" class="space-y-3">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1">Họ và Tên:</label>
+                                    <input type="text" id="acc-hoten" required placeholder="Nguyễn Văn A" class="w-full text-xs border dark:border-gray-700 dark:bg-gray-800 rounded-lg px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1">Chức Vụ:</label>
+                                    <input type="text" id="acc-chucvu" required placeholder="Bí thư / Cán bộ..." class="w-full text-xs border dark:border-gray-700 dark:bg-gray-800 rounded-lg px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1">Số Điện Thoại (Khôi phục):</label>
+                                    <input type="tel" id="acc-sdt" required placeholder="0912345678" class="w-full text-xs border dark:border-gray-700 dark:bg-gray-800 rounded-lg px-3 py-2">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1">Tên Đăng Nhập:</label>
+                                    <input type="text" id="acc-username" required placeholder="username..." class="w-full text-xs border dark:border-gray-700 dark:bg-gray-800 rounded-lg px-3 py-2">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1">Mật Khẩu:</label>
+                                    <input type="text" id="acc-password" required placeholder="password..." class="w-full text-xs border dark:border-gray-700 dark:bg-gray-800 rounded-lg px-3 py-2">
+                                </div>
+                            </div>
+                            <div id="acc-type-select-wrap">
+                                <label class="block text-xs font-semibold mb-1">Cấp Tài Khoản:</label>
+                                <select id="acc-type" class="w-full text-xs border dark:border-gray-700 dark:bg-gray-800 rounded-lg px-3 py-2">
+                                    <option value="me">Tài khoản Mẹ (Cán bộ)</option>
+                                    <option value="con">Tài khoản Con (Đảng viên)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="bg-primary hover:bg-emerald-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow">
+                                <i class="fa-solid fa-user-plus mr-1"></i> Cấp Phát Tài Khoản
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-sm">Danh Sách Tài Khoản</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-100 dark:bg-gray-900 border-b dark:border-gray-700">
+                                        <th class="p-2.5">Họ Tên</th>
+                                        <th class="p-2.5">Chức Vụ</th>
+                                        <th class="p-2.5">SĐT</th>
+                                        <th class="p-2.5">Username</th>
+                                        <th class="p-2.5">Cấp</th>
+                                        <th class="p-2.5 text-center">Xóa</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="accounts-table-body" class="divide-y dark:divide-gray-700"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="space-y-6">
+            <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border dark:border-gray-700 space-y-4">
+                <h4 class="font-bold text-base flex items-center gap-2 border-b dark:border-gray-700 pb-3">
+                    <i class="fa-solid fa-address-book text-primary"></i> Danh Bạ Lãnh Đạo & An Ninh
+                </h4>
+                <div class="space-y-3 text-xs">
+                    <div class="flex items-center justify-between p-2.5 bg-gray-50 dark:bg-gray-900 rounded-lg border dark:border-gray-700">
+                        <div><p class="font-bold">Bí Thư Chi Bộ</p><p class="text-gray-500">Nguyễn Văn Minh</p></div>
+                        <a href="tel:0901234567" class="bg-emerald-100 dark:bg-emerald-900/40 text-primary font-bold px-3 py-1.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-phone"></i> 0901 234 567</a>
+                    </div>
+                    <div class="flex items-center justify-between p-2.5 bg-gray-50 dark:bg-gray-900 rounded-lg border dark:border-gray-700">
+                        <div><p class="font-bold">Trưởng Ban An Ninh</p><p class="text-gray-500">Thiếu tá Trần Văn Hùng</p></div>
+                        <a href="tel:0912345678" class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-phone"></i> 0912 345 678</a>
+                    </div>
+                    <div class="flex items-center justify-between p-2.5 bg-gray-50 dark:bg-gray-900 rounded-lg border dark:border-gray-700">
+                        <div><p class="font-bold">Y Tế Trạm Xá</p><p class="text-gray-500">Y sĩ Lê Thị Mai</p></div>
+                        <a href="tel:0988888888" class="bg-red-100 dark:bg-red-900/40 text-red-700 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-phone"></i> 0988 888 888</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-900 to-indigo-900 text-white p-5 rounded-xl shadow space-y-3">
+                <div class="flex items-center gap-2 font-bold text-sm text-blue-200">
+                    <i class="fa-solid fa-cloud text-secondary"></i> Đồng Bộ Terabox Cloud
+                </div>
+                <p class="text-xs text-blue-100 leading-relaxed">
+                    Mọi hình ảnh, tài liệu văn bản, file PDF do người dân và cán bộ tải lên đều được tự động đồng bộ hóa trực tiếp vào Terabox Cloud Storage.
+                </p>
+                <div class="text-[11px] bg-white/10 px-3 py-2 rounded-lg flex items-center justify-between">
+                    <span>Trạng thái: <strong class="text-emerald-300">Đã kết nối</strong></span>
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 text-xs py-6 mt-12 border-t dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+            <div>
+                <p class="font-bold text-white text-sm">ỨNG DỤNG KẾT NỐI THÔN XÓM & CÁN BỘ ĐẢNG VIÊN</p>
+                <p class="mt-1">Nền tảng chuyển đổi số phục vụ nhân dân cơ sở.</p>
+            </div>
+            <div>
+                <p>Hỗ trợ kỹ thuật: 0900.1080 | Email: hotro@thonxom.vn</p>
+                <p class="mt-1">Tích hợp AI Gemini & Terabox Cloud.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-900 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-gray-700">
+        <i class="fa-solid fa-bell text-secondary text-base"></i>
+        <span id="toast-msg">Thông báo hệ thống mới!</span>
+    </div>
+
+    <!-- Modals -->
+    <div id="login-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-5 relative">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center">
+                <div class="w-12 h-12 bg-emerald-100 text-primary rounded-full flex items-center justify-center mx-auto mb-2 text-xl"><i class="fa-solid fa-user-lock"></i></div>
+                <h3 class="font-bold text-lg">Đăng Nhập Quản Trị / Cán Bộ</h3>
+                <p class="text-xs text-gray-500">Nhập tài khoản Chủ, Mẹ hoặc Con.</p>
+            </div>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div><label class="block text-xs font-semibold mb-1">Tên đăng nhập:</label><input type="text" id="login-username" required class="w-full text-sm border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2.5 outline-none"></div>
+                <div><label class="block text-xs font-semibold mb-1">Mật khẩu:</label><input type="password" id="login-password" required class="w-full text-sm border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2.5 outline-none"></div>
+                <button type="submit" class="w-full bg-primary hover:bg-emerald-800 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow">Đăng Nhập</button>
+            </form>
+            <div class="border-t dark:border-gray-700 pt-3 text-center">
+                <button onclick="openForgotModal()" class="text-xs text-primary font-semibold hover:underline"><i class="fa-solid fa-key mr-1"></i> Quên mật khẩu? (Khôi phục bằng SĐT)</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgot-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-5 relative">
+            <button onclick="closeForgotModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center">
+                <div class="w-12 h-12 bg-amber-100 text-secondary rounded-full flex items-center justify-center mx-auto mb-2 text-xl"><i class="fa-solid fa-phone-volume"></i></div>
+                <h3 class="font-bold text-lg">Khôi Phục Thông Tin Đăng Nhập</h3>
+                <p class="text-xs text-gray-500">Nhập số điện thoại đã đăng ký để tra cứu.</p>
+            </div>
+            <form onsubmit="handleForgotAccount(event)" class="space-y-4">
+                <div><label class="block text-xs font-semibold mb-1">Số điện thoại đăng ký:</label><input type="tel" id="forgot-sdt" required class="w-full text-sm border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2.5 outline-none"></div>
+                <button type="submit" class="w-full bg-secondary hover:bg-amber-700 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow">Tra Cứu Tài Khoản</button>
+            </form>
+            <div id="forgot-result-box" class="hidden bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 p-3 rounded-lg text-xs space-y-1"></div>
+        </div>
+    </div>
+
+    <div id="news-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full p-6 space-y-4 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeNewsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="font-bold text-lg border-b dark:border-gray-700 pb-2"><i class="fa-solid fa-pen-to-square text-primary"></i> Đăng Bài Tin Tức / Thông Báo</h3>
+            <form onsubmit="submitNewsArticle(event)" class="space-y-4">
+                <div><label class="block text-xs font-semibold mb-1">Tiêu đề bài viết <span class="text-red-500">*</span></label><input type="text" id="news-title" required class="w-full text-sm border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2 outline-none"></div>
+                <div>
+                    <div class="flex justify-between items-center mb-1"><label class="block text-xs font-semibold">Nội dung (Tối đa 8000 ký tự) <span class="text-red-500">*</span></label><span id="news-char-count" class="text-xs text-gray-400">0/8000</span></div>
+                    <textarea id="news-content" required maxlength="8000" rows="6" oninput="updateNewsCharCount()" class="w-full text-sm border dark:border-gray-700 dark:bg-gray-900 rounded-lg p-3 outline-none"></textarea>
+                </div>
+                <div><label class="block text-xs font-semibold mb-1">Đính kèm hình ảnh (Tối đa 10 hình)</label><input type="file" id="news-images" multiple accept="image/*" onchange="handleNewsImages(event)" class="text-xs text-gray-500"><div id="news-image-preview" class="flex gap-2 mt-2 flex-wrap"></div></div>
+                <button type="submit" class="w-full bg-primary hover:bg-emerald-800 text-white font-semibold py-2.5 rounded-lg text-sm transition shadow">Đăng Bài (Terabox Sync)</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="hop-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4 relative">
+            <button onclick="closeHopModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="font-bold text-lg border-b dark:border-gray-700 pb-2">Tạo Lịch Họp Chi Bộ</h3>
+            <form onsubmit="submitHopChiBo(event)" class="space-y-3">
+                <div><label class="block text-xs font-semibold mb-1">Tiêu đề cuộc họp:</label><input type="text" id="hop-title" required class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2"></div>
+                <div><label class="block text-xs font-semibold mb-1">Thời gian & Địa điểm:</label><input type="text" id="hop-time" required class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2"></div>
+                <div><label class="block text-xs font-semibold mb-1">Nội dung:</label><textarea id="hop-content" required rows="4" class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg p-2.5"></textarea></div>
+                <button type="submit" class="w-full bg-primary text-white text-xs font-semibold py-2.5 rounded-lg hover:bg-emerald-800 transition">Đăng Lịch Họp</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="bq-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4 relative">
+            <button onclick="closeBqModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="font-bold text-lg border-b dark:border-gray-700 pb-2">Tạo Biểu Quyết / Bình Chọn</h3>
+            <form onsubmit="submitBieuQuyet(event)" class="space-y-3">
+                <div><label class="block text-xs font-semibold mb-1">Nội dung bình chọn:</label><input type="text" id="bq-title" required class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2"></div>
+                <div><label class="block text-xs font-semibold mb-1">Các phương án (cách nhau dấu phẩy):</label><input type="text" id="bq-options" required class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2"></div>
+                <button type="submit" class="w-full bg-secondary text-white text-xs font-semibold py-2.5 rounded-lg hover:bg-amber-700 transition">Phát Động</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
