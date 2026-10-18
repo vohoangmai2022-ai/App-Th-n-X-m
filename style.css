@@ -20,27 +20,11 @@ body {
     background-color: #0b1311;
 }
 
-/* Hiệu ứng Glassmorphism & Card hiện đại */
-.glass-effect {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
-}
-.dark .glass-effect {
-    background: rgba(17, 24, 39, 0.85);
-    backdrop-filter: blur(10px);
-}
-
 /* Hiệu ứng chuyển động mượt */
 .transition-all {
     transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
-}
-
-/* Badge huy hiệu phong cách chính trị số */
-.badge-chinh-thuc {
-    background: linear-gradient(135deg, #d97706, #b45309);
-    box-shadow: 0 2px 4px rgba(217, 119, 6, 0.3);
 }
 
 /* Khung hiển thị AI Gemini */
