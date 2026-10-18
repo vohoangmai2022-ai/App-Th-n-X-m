@@ -1,28 +1,50 @@
-/* Tùy chỉnh thanh cuộn gọn gàng */
-.scrollbar-none::-webkit-scrollbar {
-    display: none;
-}
-.scrollbar-none {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
+/* Custom Scrollbar & Smooth UI */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.05);
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-}
-.dark ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: #1b4d3e;
+    border-radius: 3px;
 }
 
-/* Hiệu ứng chuyển động mượt mà khi đổi Dark Mode */
-body, header, section, nav, div, input, textarea, button {
-    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #f4f7f6;
+}
+
+.dark body {
+    background-color: #0b1311;
+}
+
+/* Hiệu ứng Glassmorphism & Card hiện đại */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+}
+.dark .glass-effect {
+    background: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(10px);
+}
+
+/* Hiệu ứng chuyển động mượt */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+}
+
+/* Badge huy hiệu phong cách chính trị số */
+.badge-chinh-thuc {
+    background: linear-gradient(135deg, #d97706, #b45309);
+    box-shadow: 0 2px 4px rgba(217, 119, 6, 0.3);
+}
+
+/* Khung hiển thị AI Gemini */
+#ai-answer-content p {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
 }
