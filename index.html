@@ -275,7 +275,7 @@
                     <div class="flex justify-between items-center border-b dark:border-gray-700 pb-4">
                         <div>
                             <h3 class="font-bold text-lg"><i class="fa-solid fa-user-shield text-primary"></i> Quản Lý Phân Quyền & Khu Vực</h3>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Tài khoản Chủ cấp tài khoản Mẹ lẫn Con. Cô lập dữ liệu riêng theo khu vực thôn xóm.</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Tài khoản Chủ / Mẹ quản lý vùng hoạt động và cấp phát tài khoản đúng phân vùng.</p>
                         </div>
                         <div id="current-user-badge" class="text-xs px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-primary font-semibold border border-emerald-200"></div>
                     </div>
@@ -302,7 +302,7 @@
                     </div>
 
                     <div class="bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 p-4 rounded-xl space-y-3">
-                        <h4 id="create-acc-title" class="font-bold text-sm">Cấp Phát Tài Khoản (Mẹ hoặc Con)</h4>
+                        <h4 id="create-acc-title" class="font-bold text-sm">Cấp Phát Tài Khoản (Mẹ / Con)</h4>
                         <form onsubmit="createNewAccount(event)" class="space-y-3">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div>
@@ -326,7 +326,7 @@
                                 <div id="acc-type-select-wrap">
                                     <label class="block text-xs font-semibold mb-1">Cấp Tài Khoản:</label>
                                     <select id="acc-type" class="w-full text-xs border dark:border-gray-700 dark:bg-gray-800 rounded-lg px-3 py-2">
-                                        <option value="me">Tài khoản Mẹ (Cán bộ)</option>
+                                        <option value="me">Tài khoản Mẹ (Cán bộ khu vực)</option>
                                         <option value="con">Tài khoản Con (Đảng viên)</option>
                                     </select>
                                 </div>
@@ -460,22 +460,29 @@
         </div>
     </div>
 
+    <!-- MODAL HỌP CHI BỘ & TÀI LIỆU NỘI BỘ (Khung tiêu đề và khung nội dung riêng) -->
     <div id="hop-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4 relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeHopModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="font-bold text-lg border-b dark:border-gray-700 pb-2">Tạo Lịch Họp Chi Bộ & Tài Liệu Nội Bộ</h3>
             <form onsubmit="submitHopChiBo(event)" class="space-y-3">
-                <div><label class="block text-xs font-semibold mb-1">Tiêu đề cuộc họp:</label><input type="text" id="hop-title" required class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2"></div>
-                <div><label class="block text-xs font-semibold mb-1">Thời gian & Địa điểm:</label><input type="text" id="hop-time" required class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2"></div>
                 <div>
-                    <label class="block text-xs font-semibold mb-1">Nội dung chi tiết & Tài liệu (Tối đa 3000 ký tự):</label>
-                    <textarea id="hop-content" required maxlength="3000" rows="5" class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg p-2.5"></textarea>
+                    <label class="block text-xs font-semibold mb-1">Khung Tiêu Đề Cuộc Họp / Tài Liệu:</label>
+                    <input type="text" id="hop-title" required placeholder="VD: Nghị quyết sinh hoạt chi bộ định kỳ..." class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Thời gian & Địa điểm:</label>
+                    <input type="text" id="hop-time" required placeholder="VD: 19h00 ngày 20 tại Nhà văn hóa..." class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Khung Nội Dung Chi Tiết (Tối đa 3000 ký tự):</label>
+                    <textarea id="hop-content" required maxlength="3000" rows="5" placeholder="Nhập chi tiết nội dung cuộc họp hoặc tài liệu..." class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg p-2.5"></textarea>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold mb-1">Đính kèm file tài liệu họp (PDF, Word):</label>
                     <input type="file" id="hop-file" accept=".pdf,.doc,.docx" class="text-xs border dark:border-gray-700 rounded-lg p-1 w-full">
                 </div>
-                <button type="submit" class="w-full bg-primary text-white text-xs font-semibold py-2.5 rounded-lg hover:bg-emerald-800 transition">Đăng Lịch Họp</button>
+                <button type="submit" class="w-full bg-primary text-white text-xs font-semibold py-2.5 rounded-lg hover:bg-emerald-800 transition">Đăng Lịch Họp & Tài Liệu</button>
             </form>
         </div>
     </div>
@@ -492,24 +499,36 @@
         </div>
     </div>
 
+    <!-- MODAL QUẢN LÝ DANH BẠ & KHẨN CẤP (Nhập bằng tay các ngành: an ninh, y tế...) -->
     <div id="contact-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 relative">
             <button onclick="closeContactModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="font-bold text-lg border-b dark:border-gray-700 pb-2">Quản Lý Danh Bạ & Khẩn Cấp</h3>
             <form onsubmit="saveNewContact(event)" class="space-y-3">
-                <div><label class="block text-xs font-semibold mb-1">Tên liên hệ / Chức vụ:</label><input type="text" id="ct-name" required class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2"></div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Chọn Ngành / Chức Danh:</label>
+                    <select id="ct-name" class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2">
+                        <option value="Bí Thư Chi Bộ">Bí Thư Chi Bộ</option>
+                        <option value="Trưởng Ban An Ninh">Trưởng Ban An Ninh</option>
+                        <option value="Y Tế Trạm Xá">Y Tế Trạm Xá</option>
+                        <option value="Công An Xã/Phường">Công An Xã/Phường</option>
+                        <option value="Quân Sự Cơ Sở">Quân Sự Cơ Sở</option>
+                        <option value="Khác">Ngành Khác</option>
+                    </select>
+                </div>
                 <div><label class="block text-xs font-semibold mb-1">Họ tên người phụ trách:</label><input type="text" id="ct-person" required class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2"></div>
-                <div><label class="block text-xs font-semibold mb-1">Số điện thoại:</label><input type="tel" id="ct-phone" required class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2"></div>
+                <div><label class="block text-xs font-semibold mb-1">Số điện thoại liên lạc:</label><input type="tel" id="ct-phone" required class="w-full text-xs border dark:border-gray-700 dark:bg-gray-900 rounded-lg px-3 py-2"></div>
                 <div class="flex items-center gap-2">
                     <input type="checkbox" id="ct-is-emergency" class="w-4 h-4 text-primary">
-                    <label class="text-xs font-semibold">Hiện nút gọi nhanh trên Header</label>
+                    <label class="text-xs font-semibold">Hiện nút gọi nhanh lên Header (Khẩn cấp)</label>
                 </div>
-                <button type="submit" class="w-full bg-primary text-white text-xs font-semibold py-2 rounded-lg">Thêm / Cập Nhật Danh Bạ</button>
+                <button type="submit" class="w-full bg-primary text-white text-xs font-semibold py-2 rounded-lg">Xác Nhận & Cập Nhật Danh Bạ</button>
             </form>
             <div id="manage-contact-list" class="space-y-2 max-h-40 overflow-y-auto mt-3 pt-3 border-t dark:border-gray-700"></div>
         </div>
     </div>
 
+    <!-- Script xử lý toàn bộ logic -->
     <script src="script.js"></script>
 </body>
 </html>
